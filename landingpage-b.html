@@ -164,6 +164,112 @@
     </style>
   </head>
   <body>
+
+    <!-- Logo Switch Control START -->
+    <div class="logo-switch-container">
+      <div class="control-group">
+        <label for="page-select">Choose Page:</label>
+        <select id="page-select">
+          <option value="landingpage-a.html">Page A</option>
+          <option value="landingpage-b.html">Page B</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="logo-select">Choose Logo:</label>
+        <select id="logo-select">
+          <option value="logo-a.svg">Logo A</option>
+          <option value="logo-b.svg">Logo B</option>
+          <option value="logo-c.svg">Logo C</option>
+          <option value="logo-d.svg">Logo D</option>
+        </select>
+      </div>
+    </div>
+
+    <style>
+      .logo-switch-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        min-width: 140px;
+      }
+
+      .control-group {
+        margin-bottom: 12px;
+      }
+
+      .control-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .logo-switch-container label {
+        display: block;
+        font-size: 12px;
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .logo-switch-container select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        width: 100%;
+        min-width: 120px;
+      }
+
+      .logo-switch-container select:focus {
+        outline: none;
+        border-color: #0b63ff;
+        box-shadow: 0 0 0 2px rgba(11, 99, 255, 0.2);
+      }
+
+      .logo-switch-container select:hover {
+        border-color: #0b63ff;
+      }
+    </style>
+
+    <script>
+      // Page and Logo switching functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const pageSelect = document.getElementById('page-select');
+        const logoSelect = document.getElementById('logo-select');
+        const logoSvg = document.getElementById('logo-svg');
+        
+        // Set current page in dropdown
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage && pageSelect) {
+          pageSelect.value = currentPage;
+        }
+        
+        // Page switching functionality
+        pageSelect.addEventListener('change', function() {
+          const selectedPage = this.value;
+          if (selectedPage !== currentPage) {
+            window.location.href = selectedPage;
+          }
+        });
+        
+        // Logo switching functionality
+        logoSelect.addEventListener('change', function() {
+          const selectedLogo = this.value;
+          logoSvg.src = selectedLogo;
+          logoSvg.alt = `Logo ${selectedLogo.charAt(5).toUpperCase()}`;
+        });
+      });
+    </script>
+    <!-- Logo Switch Control END -->
+
     <!-- HEADER -->
     <header>
       <div class="header">
@@ -211,7 +317,7 @@
           tabindex="-1"
           aria-hidden="true"
         >
-          <img id="logo-svg" src="logo.svg" alt="Logo" />
+          <img id="logo-svg" src="logo-a.svg" alt="Logo" />
         </a>
       </div>
       <div class="est-year" aria-label="Established year" role="img">

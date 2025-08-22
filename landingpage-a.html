@@ -6,8 +6,7 @@
     <title>BI World</title>
     <style>
       body,
-      html,
-      p {
+      html {
         margin: 0;
         padding: 0;
         font-family: Verdana, Arial, sans-serif;
@@ -15,16 +14,6 @@
       a {
         color: inherit;
         text-decoration: none;
-      }
-      .content {
-        padding: 0 16px;
-      }
-      .content,
-      .header,
-      .footer {
-        padding: 0;
-        max-width: 840px;
-        margin: 0 auto;
       }
 
       /* HEADER */
@@ -40,7 +29,7 @@
         justify-content: space-between;
         width: 100%;
       }
-      .header h1 {
+      header h1 {
         font-size: 24px;
         margin: 0;
       }
@@ -52,18 +41,40 @@
         color: #b14fa2;
         text-decoration: none;
       }
+
+      nav {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+      }
+      nav a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+      }
+      nav a:hover {
+        background: #f0f0f0;
+      }
+
+      /* content area */
+      .content,
+      .header {
+        padding: 0;
+        max-width: 840px;
+        margin: 0 auto;
+      }
       /* HERO BANNER */
       .hero {
         color: #535353;
         padding: 24px 0;
-        background: linear-gradient(180deg, #939393 0%, #ffffff 100%);
       }
-      .hero h2.subtext {
-        font-size: 20px;
-        font-weight: 400;
-        color: #fff;
-        margin: 0;
-      }
+
       .hero p {
         font-size: 16px;
         line-height: 1.5;
@@ -89,10 +100,15 @@
       #logo-svg:focus {
         outline: none;
       }
+      polygon#logo-triangle {
+        fill: #0b63ff;
+        opacity: 0.12;
+        pointer-events: none;
+      }
       .word {
         position: absolute;
         color: #ccc;
-        opacity: 0.7;
+        opacity: 0.9;
         user-select: none;
         white-space: nowrap;
         transition: left 1s ease, top 1s ease;
@@ -138,32 +154,141 @@
         background: #939393;
         color: white;
         text-align: center;
-        padding: 22px 16px;
+        padding: 15px;
         font-size: 14px;
-        font-weight: 600;
-        background: linear-gradient(180deg, #ffffff 3%, #939393 70%);
+      }
+      .hero h2.subtext {
+        font-size: 20px;
+        font-weight: 400;
+        color: #555;
+        margin: 0;
       }
 
       @media (max-width: 670px) {
         .content,
-        header,
-        footer {
+        .header {
           max-width: 100%;
         }
         .header h1 {
           font-size: 18px;
         }
-        .content {
-          padding: 0 12px;
-        }
-        footer,
+
         header {
-          padding: 16px 12px;
+          padding: 12px;
+        }
+        .hero {
+          padding: 16px;
         }
       }
     </style>
   </head>
   <body>
+
+    <!-- Logo Switch Control START -->
+    <div class="logo-switch-container">
+      <div class="control-group">
+        <label for="page-select">Choose Page:</label>
+        <select id="page-select">
+          <option value="landingpage-a.html">Page A</option>
+          <option value="landingpage-b.html">Page B</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="logo-select">Choose Logo:</label>
+        <select id="logo-select">
+          <option value="logo-a.svg">Logo A</option>
+          <option value="logo-b.svg">Logo B</option>
+          <option value="logo-c.svg">Logo C</option>
+          <option value="logo-d.svg">Logo D</option>
+        </select>
+      </div>
+    </div>
+
+    <style>
+      .logo-switch-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        min-width: 140px;
+      }
+
+      .control-group {
+        margin-bottom: 12px;
+      }
+
+      .control-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .logo-switch-container label {
+        display: block;
+        font-size: 12px;
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .logo-switch-container select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: white;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        width: 100%;
+        min-width: 120px;
+      }
+
+      .logo-switch-container select:focus {
+        outline: none;
+        border-color: #0b63ff;
+        box-shadow: 0 0 0 2px rgba(11, 99, 255, 0.2);
+      }
+
+      .logo-switch-container select:hover {
+        border-color: #0b63ff;
+      }
+    </style>
+
+    <script>
+      // Page and Logo switching functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const pageSelect = document.getElementById('page-select');
+        const logoSelect = document.getElementById('logo-select');
+        const logoSvg = document.getElementById('logo-svg');
+        
+        // Set current page in dropdown
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage && pageSelect) {
+          pageSelect.value = currentPage;
+        }
+        
+        // Page switching functionality
+        pageSelect.addEventListener('change', function() {
+          const selectedPage = this.value;
+          if (selectedPage !== currentPage) {
+            window.location.href = selectedPage;
+          }
+        });
+        
+        // Logo switching functionality
+        logoSelect.addEventListener('change', function() {
+          const selectedLogo = this.value;
+          logoSvg.src = selectedLogo;
+          logoSvg.alt = `Logo ${selectedLogo.charAt(5).toUpperCase()}`;
+        });
+      });
+    </script>
+    <!-- Logo Switch Control END -->
+
     <!-- HEADER -->
     <header>
       <div class="header">
@@ -179,12 +304,17 @@
             >&#9776;
           </a>
         </div>
+        <nav id="menu">
+          <a href="#">Home</a>
+          <a href="#">About</a>
+          <a href="#">Services</a>
+          <a href="#">Contact</a>
+        </nav>
       </div>
     </header>
-
-    <!-- HERO BANNER -->
-    <div class="hero">
-      <div class="content">
+    <div class="content">
+      <!-- HERO BANNER -->
+      <div class="hero">
         <h2 class="subtext">Support for like minded investors...</h2>
         <p>
           Birmingham Inventors was established on September 11th 1984 and has
@@ -195,8 +325,7 @@
           privately funded research and development from concept to marketing.
         </p>
       </div>
-    </div>
-    <div class="content">
+
       <!-- LOGO CONTAINER -->
       <div
         id="container"
@@ -211,7 +340,7 @@
           tabindex="-1"
           aria-hidden="true"
         >
-          <img id="logo-svg" src="logo.svg" alt="Logo" />
+          <img id="logo-svg" src="logo-a.svg" alt="Logo" />
         </a>
       </div>
       <div class="est-year" aria-label="Established year" role="img">
@@ -220,13 +349,15 @@
     </div>
 
     <!-- FOOTER -->
-    <footer>
-      <div class="footer">
-        <p>&copy; 2025 Birmingham Inventors. All rights reserved.</p>
-      </div>
-    </footer>
+    <footer>&copy; 2025 Birmingham Inventors. All rights reserved.</footer>
 
     <script>
+      // Toggle Menu
+      document.getElementById('menu-toggle').addEventListener('click', () => {
+        //const menu = document.getElementById('menu');
+        // menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      });
+      /* Original Logo Word Placement Script */
       const container = document.getElementById('container');
       const logoSVG = document.getElementById('logo-svg');
       const logoLink = document.getElementById('logo-link');
@@ -240,13 +371,11 @@
         'Innovation',
         'Confidentiality',
         'Trade Marks',
-        'CopyRights',
+        'Copy Rights',
         'Ideas',
         'Crowdfunding',
-        'Design',
-        'Rights',
-        'Protect',
-        'Your Idea',
+        'Design Rights',
+        'Protect Your Idea',
         'Creative',
         'Funding',
         'Patents',
@@ -255,38 +384,33 @@
         'Designs',
         'Licensing',
         'Branding',
-        'TradeMarks',
-        'DesignRights',
-        'Branding',
+        'Trade Marks',
+        'Design Rights',
         'Prototyping',
         'Appraisals',
         'Patents',
         'IP',
         'Innovation',
-        'Business',
-        'Support',
-        'Practical',
-        'Creative',
-        'Workshops',
-        'CopyRights',
+        'Business Support',
+        'Practical Workshops',
+        'Copy Rights',
         'Marketing',
         'Invention',
         'Crowdfunding',
-        'PatentPending',
-        'TradeSecrets',
-        'Investors',
+        'Patent Pending',
+        'Trade Secrets',
         'Branding',
         'Trade Marks',
-        'Design',
-        'Rights',
-        'Patents',
+        'Design Rights',
         'Prototyping',
         'Appraisals',
         'Patents',
+        'IP',
         'Innovation',
-        'Busines',
-        'Support',
+        'Business Support',
+        'Confidentiality',
         'Licensing',
+        'Patent Attorneys',
         'NDA',
         'Investors',
         'Funding',
@@ -310,10 +434,10 @@
         return s >= 0 && t >= 0 && s + t <= D;
       }
 
-      let containerRect = container.getBoundingClientRect();
-      let svgRect = logoSVG.getBoundingClientRect();
-      let scaleX = svgRect.width / 800;
-      let scaleY = svgRect.height / 800;
+      const containerRect = container.getBoundingClientRect();
+      const svgRect = logoSVG.getBoundingClientRect();
+      const scaleX = svgRect.width / 800;
+      const scaleY = svgRect.height / 800;
 
       function svgToContainer(pt) {
         return {
@@ -332,16 +456,30 @@
         return pointInTriangle(svgPt, ...trianglePoints);
       }
 
-      let polyMinX =
+      const logoCenter = svgToContainer({ x: 400, y: 460 });
+
+      function overlapsAny(box, boxes, padding = 0) {
+        return boxes.some(
+          (b) =>
+            !(
+              box.x + box.width + padding < b.x - padding ||
+              box.x - padding > b.x + b.width + padding ||
+              box.y + box.height + padding < b.y - padding ||
+              box.y - padding > b.y + b.height + padding
+            )
+        );
+      }
+
+      const polyMinX =
         Math.min(...trianglePoints.map((p) => p.x)) * scaleX +
         (svgRect.left - containerRect.left);
-      let polyMaxX =
+      const polyMaxX =
         Math.max(...trianglePoints.map((p) => p.x)) * scaleX +
         (svgRect.left - containerRect.left);
-      let polyMinY =
+      const polyMinY =
         Math.min(...trianglePoints.map((p) => p.y)) * scaleY +
         (svgRect.top - containerRect.top);
-      let polyMaxY =
+      const polyMaxY =
         Math.max(...trianglePoints.map((p) => p.y)) * scaleY +
         (svgRect.top - containerRect.top);
 
@@ -352,12 +490,12 @@
         height: polyMaxY - polyMinY,
       };
 
-      function boxesOverlapWithPadding(a, b, pad = 0) {
+      function boxesOverlap(boxA, boxB) {
         return !(
-          a.x + a.width + pad < b.x - pad ||
-          a.x - pad > b.x + b.width + pad ||
-          a.y + a.height + pad < b.y - pad ||
-          a.y - pad > b.y + b.height + pad
+          boxA.x + boxA.width < boxB.x ||
+          boxA.x > boxB.x + boxB.width ||
+          boxA.y + boxA.height < boxB.y ||
+          boxA.y > boxB.y + boxB.height
         );
       }
 
@@ -370,107 +508,25 @@
         oldWords.forEach((w) => w.remove());
 
         const placedBoxes = [];
-        const padding = 4; // Reduced padding for tighter layout
+        const padding = 10;
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
+
         const polyCenter = {
           x: polyBox.x + polyBox.width / 2,
           y: polyBox.y + polyBox.height / 2,
         };
 
-        const fontWeights = [400, 500, 600, 700];
-        const fontSizes = [
-          16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-        ];
-        const maxDistance =
-          Math.sqrt(containerWidth ** 2 + containerHeight ** 2) / 2;
-
         for (const word of words) {
           let tries = 0;
-          while (tries < 300) {
-            // Increased tries for better fitting with less padding
+          while (tries < 500) {
+            // More tries for better placement
+            const fontSize = randInt(16, 32);
             const rotation = randInt(-40, 40);
 
+            // Create span for measurement
             const span = document.createElement('span');
-            span.textContent = word;
-            span.style.position = 'absolute';
-            span.style.whiteSpace = 'nowrap';
-            container.appendChild(span);
 
-            // Initial font size and weight for sizing
-            span.style.fontSize =
-              fontSizes[Math.floor(fontSizes.length / 2)] + 'px';
-            span.style.fontWeight =
-              fontWeights[Math.floor(fontWeights.length / 2)];
-
-            let wordWidth = span.offsetWidth;
-            let wordHeight = span.offsetHeight;
-
-            const x = randInt(padding, containerWidth - wordWidth - padding);
-            const y = randInt(padding, containerHeight - wordHeight - padding);
-            const box = { x, y, width: wordWidth, height: wordHeight };
-
-            const overlapsWord = placedBoxes.some((p) =>
-              boxesOverlapWithPadding(box, p, padding)
-            );
-            const overlapsPolyBox = boxesOverlapWithPadding(
-              box,
-              polyBox,
-              padding
-            );
-            const inTriangle = pointInTriangleContainerCoords({
-              x: x + wordWidth / 2,
-              y: y + wordHeight / 2,
-            });
-
-            if (overlapsWord || overlapsPolyBox || inTriangle) {
-              span.remove();
-              tries++;
-              continue;
-            }
-
-            const wordCenter = { x: x + wordWidth / 2, y: y + wordHeight / 2 };
-            const dx = wordCenter.x - polyCenter.x;
-            const dy = wordCenter.y - polyCenter.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const normDist = Math.min(distance / maxDistance, 1);
-
-            // Select font size and weight by proximity
-            const fontSizeIndex = Math.min(
-              fontSizes.length - 1,
-              Math.floor((1 - normDist) * fontSizes.length)
-            );
-            const fontSize = fontSizes[fontSizeIndex];
-            span.style.fontSize = fontSize + 'px';
-
-            // Update size after font size change
-            wordWidth = span.offsetWidth;
-            wordHeight = span.offsetHeight;
-            box.width = wordWidth;
-            box.height = wordHeight;
-
-            if (
-              placedBoxes.some((p) =>
-                boxesOverlapWithPadding(box, p, padding)
-              ) ||
-              boxesOverlapWithPadding(box, polyBox, padding) ||
-              pointInTriangleContainerCoords({
-                x: x + wordWidth / 2,
-                y: y + wordHeight / 2,
-              })
-            ) {
-              span.remove();
-              tries++;
-              continue;
-            }
-
-            const fontWeightIndex = Math.min(
-              fontWeights.length - 1,
-              Math.floor((1 - normDist) * fontWeights.length)
-            );
-            span.style.fontWeight = fontWeights[fontWeightIndex];
-
-            // Assign class based on font size
             if (fontSize === 19 || fontSize === 23) {
               span.className = 'word prime';
             } else if (fontSize === 18) {
@@ -485,9 +541,47 @@
               span.className = 'word odd';
             }
 
+            span.textContent = word;
+            span.style.fontSize = fontSize + 'px';
             span.style.transform = `rotate(${rotation}deg)`;
             span.style.left = `${polyCenter.x}px`;
             span.style.top = `${polyCenter.y}px`;
+            span.style.position = 'absolute';
+            span.style.whiteSpace = 'nowrap';
+            container.appendChild(span);
+
+            const wordWidth = span.offsetWidth;
+            const wordHeight = span.offsetHeight;
+
+            // Random target position
+            const x = randInt(padding, containerWidth - wordWidth - padding);
+            const y = randInt(padding, containerHeight - wordHeight - padding);
+            const box = { x, y, width: wordWidth, height: wordHeight };
+
+            // Strict overlap check
+            const overlapsWord = placedBoxes.some(
+              (p) =>
+                p.x < box.x + box.width + 2 &&
+                p.x + p.width + 2 > box.x &&
+                p.y < box.y + box.height + 2 &&
+                p.y + p.height + 2 > box.y
+            );
+
+            // Reject invalid positions
+            if (
+              overlapsWord ||
+              boxesOverlap(box, polyBox) ||
+              pointInTriangleContainerCoords({
+                x: x + wordWidth / 2,
+                y: y + wordHeight / 2,
+              })
+            ) {
+              span.remove();
+              tries++;
+              continue;
+            }
+
+            // Animate from polygon center to final position
             requestAnimationFrame(() => {
               span.style.transition = 'left 0.7s ease, top 0.7s ease';
               span.style.left = `${x}px`;
@@ -519,37 +613,6 @@
         if (!logoSVG.contains(e.target)) {
           placeWords();
         }
-      });
-
-      let resizeTimeout;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          containerRect = container.getBoundingClientRect();
-          svgRect = logoSVG.getBoundingClientRect();
-          scaleX = svgRect.width / 800;
-          scaleY = svgRect.height / 800;
-
-          const polyMinX =
-            Math.min(...trianglePoints.map((p) => p.x)) * scaleX +
-            (svgRect.left - containerRect.left);
-          const polyMaxX =
-            Math.max(...trianglePoints.map((p) => p.x)) * scaleX +
-            (svgRect.left - containerRect.left);
-          const polyMinY =
-            Math.min(...trianglePoints.map((p) => p.y)) * scaleY +
-            (svgRect.top - containerRect.top);
-          const polyMaxY =
-            Math.max(...trianglePoints.map((p) => p.y)) * scaleY +
-            (svgRect.top - containerRect.top);
-
-          polyBox.x = polyMinX;
-          polyBox.y = polyMinY;
-          polyBox.width = polyMaxX - polyMinX;
-          polyBox.height = polyMaxY - polyMinY;
-
-          placeWords();
-        }, 500);
       });
     </script>
   </body>
